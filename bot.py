@@ -4,6 +4,7 @@ import os
 from asyncio import sleep
 
 from aiogram import Bot, Dispatcher, executor, types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from dotenv import load_dotenv
 from loguru import logger
 
@@ -12,13 +13,32 @@ bot = Bot(token=os.environ['TOKEN'])
 dp = Dispatcher(bot)
 
 
-@dp.message_handler(commands=['on'])
+@dp.message_handler(commands=['start'], )
 async def send_welcome(message: types.Message):
-    await message.answer('Set status on')
+    await message.answer('Start',
+                         reply_markup=ReplyKeyboardMarkup(
+                             keyboard=[
+                                 [KeyboardButton('Start')]
+                             ],
+                             resize_keyboard=True
+                         ))
 
-    await sleep(30)
 
-    await message.answer('Set status off')
+@dp.message_handler(lambda message: message.text == 'Start')
+async def send_welcome(message: types.Message):
+    with open(os.environ['STATUS_FILE'], 'w+') as file_:
+        file_.write('1')
+
+    logger.info('Begin start')
+    await message.answer('Begin start')
+
+    await sleep(int(os.environ['PAUSE']))
+
+    with open(os.environ['STATUS_FILE'], 'w+') as file_:
+        file_.write('0')
+
+    logger.info('End start')
+    await message.answer('End start')
 
 
 if __name__ == '__main__':
