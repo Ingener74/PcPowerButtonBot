@@ -35,7 +35,7 @@ async def send_welcome(message: types.Message):
     await sleep(int(os.environ['PAUSE']))
 
     with open(os.environ['STATUS_FILE'], 'w+') as file_:
-        file_.write('0')
+        file_.write('0\n')
 
     logger.info('End start')
     await message.answer('End start')
