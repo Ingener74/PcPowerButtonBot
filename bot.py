@@ -27,7 +27,7 @@ async def send_welcome(message: types.Message):
 @dp.message_handler(lambda message: message.text == 'Start')
 async def send_welcome(message: types.Message):
     with open(os.environ['STATUS_FILE'], 'w+') as file_:
-        file_.write('1')
+        file_.write('1\n')
 
     logger.info('Begin start')
     await message.answer('Begin start')
